@@ -13,11 +13,10 @@ function getAllExpenses(req, res) {
 function getExpense(req, res) {
   try {
     const expId = +req.params.expId;
-    const expenses = getAllExpenses();
     const expense = expensesModel.getExpense(expId);
 
-    if (!expId || !expenses.some((ex) => ex.id === expId)) {
-      return res.status(404).json({ message: `Витрату ${expId} не знайдено` });
+    if (!expId || !expense) {
+      return res.status(400).json({ message: `Витрату ${expId} не знайдено` });
     }
 
     res.status(200).json(expense);
@@ -31,16 +30,16 @@ function createExpense(req, res) {
     const body = req.body;
 
     if (!body) {
-      return res.status(404).json({ message: 'Не передано тіло запиту' });
+      return res.status(400).json({ message: 'Не передано тіло запиту' });
     }
 
-    const newExpanse = expensesModel.createExpense(body);
+    const newExpense = expensesModel.createExpense(body);
 
-    if (!newExpanse) {
+    if (!newExpense) {
       return res.status(500).json({ message: 'Нову витрату не створено' });
     }
 
-    res.status(201).json(newExpanse);
+    res.status(201).json(newExpense);
   } catch (err) {
     res.status(500).json({ message: 'Не вдалося створити витрату' });
   }
