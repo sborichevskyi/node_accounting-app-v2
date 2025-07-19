@@ -67,9 +67,7 @@ function updateUser(req, res) {
     if (!name) {
       return res.status(400).json({ error: 'New name is required' });
     } else if (!userId) {
-      return res
-        .status(400)
-        .json({ error: 'UserId is required in request body' });
+      return res.status(400).json({ error: 'UserId is required in URL' });
     }
 
     const updatedUser = usersModel.editUser(userId, name);

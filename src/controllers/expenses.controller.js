@@ -13,9 +13,10 @@ function getAllExpenses(req, res) {
 function getExpense(req, res) {
   try {
     const expId = +req.params.expId;
+    const expenses = getAllExpenses();
     const expense = expensesModel.getExpense(expId);
 
-    if (!expId) {
+    if (!expId || !expenses.some((ex) => ex.id === expId)) {
       return res.status(404).json({ message: `Витрату ${expId} не знайдено` });
     }
 
@@ -33,13 +34,13 @@ function createExpense(req, res) {
       return res.status(404).json({ message: 'Не передано тіло запиту' });
     }
 
-    const newExpance = expensesModel.createExpense(body);
+    const newExpanse = expensesModel.createExpense(body);
 
-    if (!newExpance) {
+    if (!newExpanse) {
       return res.status(500).json({ message: 'Нову витрату не створено' });
     }
 
-    res.status(200).json(newExpance);
+    res.status(201).json(newExpanse);
   } catch (err) {
     res.status(500).json({ message: 'Не вдалося створити витрату' });
   }
@@ -48,9 +49,9 @@ function createExpense(req, res) {
 function removeExpense(req, res) {
   try {
     const expId = +req.params.expId;
-    const removedExpence = expensesModel.removeExpense(expId);
+    const removedExpense = expensesModel.removeExpense(expId);
 
-    if (!removedExpence) {
+    if (!removedExpense) {
       return res.status(404).json({ message: `Витрату ${expId} не знайдено` });
     }
     res.status(204).end();
@@ -59,7 +60,7 @@ function removeExpense(req, res) {
   }
 }
 
-function updateExpanse(req, res) {
+function updateExpense(req, res) {
   try {
     const body = req.body;
     const expId = +req.params.expId;
@@ -67,16 +68,14 @@ function updateExpanse(req, res) {
     if (!body) {
       return res.status(400).json({ error: 'Body is required' });
     } else if (!expId) {
-      return res
-        .status(400)
-        .json({ error: 'Expense id is required in request body' });
+      return res.status(400).json({ error: 'Expense id is required in URL' });
     }
 
-    const updatedExpanse = expensesModel.editExpense(expId, body);
+    const updatedExpense = expensesModel.editExpense(expId, body);
 
-    res.status(200).json(updatedExpanse);
+    res.status(200).json(updatedExpense);
   } catch (err) {
-    res.status(500).json({ message: 'Не вдалося оновити користувача' });
+    res.status(500).json({ message: 'Не вдалося оновити витрату' });
   }
 }
 
@@ -85,5 +84,5 @@ module.exports = {
   getExpense,
   createExpense,
   removeExpense,
-  updateExpanse,
+  updateExpanse: updateExpense,
 };
