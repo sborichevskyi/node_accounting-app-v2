@@ -83,5 +83,5 @@ module.exports = {
   getExpense,
   createExpense,
   removeExpense,
-  updateExpanse: updateExpense,
+  updateExpense,
 };
